@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Preview - Numia Style</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>PDF Preview</h1>
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-link">Inicio</a>
+                <a href="#" class="nav-link">Funciones</a>
+                <a href="#" class="nav-link">Contacto</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero">
+                <h2 class="hero-title">Previsualiza y simula la impresión de tus PDFs</h2>
+                <p class="hero-subtitle">Carga tu documento PDF y obtén una vista previa perfecta antes de imprimir</p>
+            </section>
+
+            <section class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <div class="upload-icon">📄</div>
+                        <h3>Arrastra tu PDF aquí o haz clic para seleccionar</h3>
+                        <p>Formatos soportados: PDF</p>
+                        <input type="file" id="fileInput" accept=".pdf" hidden>
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                            Seleccionar archivo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="preview-section" id="previewSection" style="display: none;">
+                <div class="preview-header">
+                    <h3>Vista previa del documento</h3>
+                    <div class="preview-controls">
+                        <button class="btn btn-secondary" id="prevPage">← Anterior</button>
+                        <span id="pageInfo">Página 1 de 1</span>
+                        <button class="btn btn-secondary" id="nextPage">Siguiente →</button>
+                        <button class="btn btn-primary" id="printBtn">🖨️ Imprimir</button>
+                    </div>
+                </div>
+                <div class="preview-container">
+                    <canvas id="pdfCanvas"></canvas>
+                </div>
+            </section>
+
+            <section class="print-section" id="printSection" style="display: none;">
+                <div class="print-header">
+                    <h3>Vista de impresión</h3>
+                    <div class="print-controls">
+                        <button class="btn btn-secondary" id="backToPreview">← Volver a vista previa</button>
+                        <button class="btn btn-primary" id="actualPrint">🖨️ Imprimir</button>
+                    </div>
+                </div>
+                <div class="print-container" id="printContainer">
+                    <!-- El contenido del PDF se renderizará aquí para la simulación de impresión -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 PDF Preview. Inspirado en el diseño de <a href="https://numia.co" target="_blank">Numia</a></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
