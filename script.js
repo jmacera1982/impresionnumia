@@ -10,6 +10,7 @@ let scale = 1.5;
 // Elementos del DOM
 const fileInput = document.getElementById('fileInput');
 const uploadArea = document.getElementById('uploadArea');
+const uploadSection = document.getElementById('uploadSection');
 const previewSection = document.getElementById('previewSection');
 const printSection = document.getElementById('printSection');
 const pdfCanvas = document.getElementById('pdfCanvas');
@@ -17,6 +18,7 @@ const printContainer = document.getElementById('printContainer');
 const pageInfo = document.getElementById('pageInfo');
 const prevPageBtn = document.getElementById('prevPage');
 const nextPageBtn = document.getElementById('nextPage');
+const loadAnotherBtn = document.getElementById('loadAnotherBtn');
 const printBtn = document.getElementById('printBtn');
 const backToPreviewBtn = document.getElementById('backToPreview');
 const actualPrintBtn = document.getElementById('actualPrint');
@@ -29,6 +31,7 @@ uploadArea.addEventListener('dragleave', handleDragLeave);
 uploadArea.addEventListener('drop', handleDrop);
 prevPageBtn.addEventListener('click', () => changePage(-1));
 nextPageBtn.addEventListener('click', () => changePage(1));
+loadAnotherBtn.addEventListener('click', loadAnotherFile);
 printBtn.addEventListener('click', showPrintView);
 backToPreviewBtn.addEventListener('click', showPreviewView);
 actualPrintBtn.addEventListener('click', printDocument);
@@ -74,7 +77,8 @@ async function loadPDF(file) {
         totalPages = currentPdf.numPages;
         currentPage = 1;
         
-        // Mostrar solo sección de previsualización
+        // Ocultar sección de carga y mostrar solo previsualización
+        uploadSection.style.display = 'none';
         previewSection.style.display = 'block';
         printSection.style.display = 'none';
         
@@ -194,6 +198,25 @@ function showPreviewView() {
     printSection.style.display = 'none';
     previewSection.style.display = 'block';
     previewSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Cargar otro archivo
+function loadAnotherFile() {
+    // Limpiar el input de archivo
+    fileInput.value = '';
+    
+    // Mostrar sección de carga y ocultar las demás
+    uploadSection.style.display = 'block';
+    previewSection.style.display = 'none';
+    printSection.style.display = 'none';
+    
+    // Limpiar variables
+    currentPdf = null;
+    currentPage = 1;
+    totalPages = 0;
+    
+    // Scroll suave a la sección de carga
+    uploadSection.scrollIntoView({ behavior: 'smooth' });
 }
 
 // Imprimir documento
