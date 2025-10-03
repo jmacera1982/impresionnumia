@@ -8,8 +8,10 @@
     <style>
         .order-detail-container {
             max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 20px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            background: #f8f9fa;
         }
         
         .order-detail-card {
@@ -139,6 +141,10 @@
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .back-button:hover {
@@ -189,8 +195,8 @@
         
         @media (max-width: 768px) {
             .order-detail-container {
-                margin: 1rem auto;
-                padding: 0 15px;
+                margin: 0 auto;
+                padding: 15px;
             }
             
             .order-detail-header {
@@ -239,19 +245,6 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="logo">
-                <h1>Sistema de Pedidos</h1>
-            </div>
-            <nav class="nav">
-                <a href="index.html" class="nav-link">Inicio</a>
-                <a href="#" class="nav-link">Pedidos</a>
-                <a href="#" class="nav-link">Contacto</a>
-            </nav>
-        </div>
-    </header>
-
     <main class="main">
         <div class="order-detail-container">
             <a href="index.html" class="back-button">
@@ -315,12 +308,6 @@
             </div>
         </div>
     </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 Sistema de Pedidos. Inspirado en el diseño de <a href="https://numia.co" target="_blank">Numia</a></p>
-        </div>
-    </footer>
 
     <script>
         // Configuración de la API
