@@ -63,7 +63,7 @@
         
         .order-detail-table th {
             padding: 1rem 1.5rem;
-            text-align: left;
+            text-align: center;
             font-weight: 600;
             font-size: 1rem;
         }
@@ -72,13 +72,14 @@
             padding: 1rem 1.5rem;
             border-bottom: 1px solid #e9ecef;
             font-size: 1rem;
+            text-align: center;
         }
         
         .order-detail-table tbody tr:last-child td {
             border-bottom: none;
         }
         
-        .order-detail-table tbody tr:nth-child(even) {
+        .order-detail-table tbody tr {
             background: #f8f9fa;
         }
         
@@ -87,13 +88,7 @@
             transition: background-color 0.3s ease;
         }
         
-        .order-detail-table td:first-child {
-            font-weight: 600;
-            color: #1a1a1a;
-            width: 40%;
-        }
-        
-        .order-detail-table td:last-child {
+        .order-detail-table td {
             color: #333;
             font-weight: 500;
         }
@@ -210,10 +205,14 @@
                 padding: 1.5rem;
             }
             
+            .order-detail-table {
+                font-size: 0.9rem;
+            }
+            
             .order-detail-table th,
             .order-detail-table td {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
             }
             
             .order-actions {
@@ -223,16 +222,18 @@
         
         @media (max-width: 480px) {
             .order-detail-table {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
             }
             
             .order-detail-table th,
             .order-detail-table td {
-                padding: 0.5rem 0.75rem;
+                padding: 0.5rem 0.25rem;
+                font-size: 0.75rem;
             }
             
-            .order-detail-table td:first-child {
-                width: 35%;
+            .order-detail-table th:nth-child(2),
+            .order-detail-table td:nth-child(2) {
+                display: none; /* Ocultar columna Producto en móviles muy pequeños */
             }
         }
     </style>
@@ -283,29 +284,19 @@
                         <table class="order-detail-table">
                             <thead>
                                 <tr>
-                                    <th>Campo</th>
-                                    <th>Valor</th>
+                                    <th>ID del Pedido</th>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>ID Turno</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><strong>ID del Pedido</strong></td>
                                     <td id="tableOrderId">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Producto</strong></td>
                                     <td id="tableProducto">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Cantidad</strong></td>
                                     <td id="tableCantidad">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Precio</strong></td>
                                     <td id="tablePrecio">-</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>ID Turno</strong></td>
                                     <td id="tableIdTurno">-</td>
                                 </tr>
                             </tbody>
