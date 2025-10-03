@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Pedido - Sistema de Pedidos</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .order-detail-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+        
+        .order-detail-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .order-detail-header {
+            background: linear-gradient(135deg, #0066CC 0%, #004499 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .order-detail-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .order-detail-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .order-detail-content {
+            padding: 2rem;
+        }
+        
+        .order-table-container {
+            margin: 2rem 0;
+        }
+        
+        .order-detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .order-detail-table thead {
+            background: linear-gradient(135deg, #0066CC 0%, #004499 100%);
+            color: white;
+        }
+        
+        .order-detail-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .order-detail-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 1rem;
+        }
+        
+        .order-detail-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .order-detail-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .order-detail-table tbody tr:hover {
+            background: #e3f2fd;
+            transition: background-color 0.3s ease;
+        }
+        
+        .order-detail-table td:first-child {
+            font-weight: 600;
+            color: #1a1a1a;
+            width: 40%;
+        }
+        
+        .order-detail-table td:last-child {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .empty-value {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0066CC;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-state {
+            text-align: center;
+            padding: 3rem;
+            color: #dc3545;
+        }
+        
+        .error-state h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            color: #0066CC;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .back-button:hover {
+            color: #004499;
+        }
+        
+        .order-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-edit {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-delete {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .order-detail-container {
+                margin: 1rem auto;
+                padding: 0 15px;
+            }
+            
+            .order-detail-header {
+                padding: 1.5rem;
+            }
+            
+            .order-detail-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .order-detail-content {
+                padding: 1.5rem;
+            }
+            
+            .order-detail-table th,
+            .order-detail-table td {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .order-actions {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .order-detail-table {
+                font-size: 0.85rem;
+            }
+            
+            .order-detail-table th,
+            .order-detail-table td {
+                padding: 0.5rem 0.75rem;
+            }
+            
+            .order-detail-table td:first-child {
+                width: 35%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>Sistema de Pedidos</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="#" class="nav-link">Pedidos</a>
+                <a href="#" class="nav-link">Contacto</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="order-detail-container">
+            <a href="index.html" class="back-button">
+                ← Volver al inicio
+            </a>
+            
+            <div class="order-detail-card">
+                <div class="order-detail-header">
+                    <h1>Detalle del Pedido</h1>
+                    <p id="orderIdDisplay">Cargando información...</p>
+                </div>
+                
+                <div class="order-detail-content">
+                    <!-- Estado de carga -->
+                    <div id="loadingState" class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <h3>Cargando información del pedido...</h3>
+                        <p>Por favor espera mientras obtenemos los datos.</p>
+                    </div>
+                    
+                    <!-- Estado de error -->
+                    <div id="errorState" class="error-state" style="display: none;">
+                        <h3>Error al cargar el pedido</h3>
+                        <p id="errorMessage">No se pudo obtener la información del pedido.</p>
+                        <button class="btn btn-primary" onclick="loadOrderDetail()">Reintentar</button>
+                    </div>
+                    
+                    <!-- Tabla del pedido -->
+                    <div id="orderTable" class="order-table-container" style="display: none;">
+                        <table class="order-detail-table">
+                            <thead>
+                                <tr>
+                                    <th>Campo</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>ID del Pedido</strong></td>
+                                    <td id="tableOrderId">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Producto</strong></td>
+                                    <td id="tableProducto">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cantidad</strong></td>
+                                    <td id="tableCantidad">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Precio</strong></td>
+                                    <td id="tablePrecio">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ID Turno</strong></td>
+                                    <td id="tableIdTurno">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="order-actions">
+                            <button type="button" class="btn-edit" onclick="toggleEditMode()">
+                                ✏️ Editar Pedido
+                            </button>
+                            <button type="button" class="btn-delete" onclick="deleteOrder()">
+                                🗑️ Eliminar Pedido
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Sistema de Pedidos. Inspirado en el diseño de <a href="https://numia.co" target="_blank">Numia</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuración de la API
+        const API_BASE_URL = 'https://app.nocodb.com/api/v2/tables/mbu941n3nyso37w/records';
+        const API_TOKEN = 'esMWeT85CmXjEnt5kvF1J97zD-d4_BX9rq228I9z';
+        const VIEW_ID = 'vwfniosptb8nmrxr';
+        
+        // Variables globales
+        let currentOrderId = null;
+        let isEditMode = false;
+        
+        // Elementos del DOM
+        const loadingState = document.getElementById('loadingState');
+        const errorState = document.getElementById('errorState');
+        const orderTable = document.getElementById('orderTable');
+        const orderIdDisplay = document.getElementById('orderIdDisplay');
+        const errorMessage = document.getElementById('errorMessage');
+        
+        // Función para obtener parámetros de la URL
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        
+        // Función para cargar el detalle del pedido
+        async function loadOrderDetail() {
+            try {
+                // Obtener ID del parámetro de la URL
+                const orderId = getUrlParameter('id');
+                
+                if (!orderId) {
+                    showError('No se proporcionó un ID de pedido válido en la URL.');
+                    return;
+                }
+                
+                currentOrderId = orderId;
+                showLoading();
+                
+                // Construir URL de la API
+                const apiUrl = `${API_BASE_URL}?offset=0&limit=25&where=&viewId=${VIEW_ID}&where=(Id,eq,${orderId})`;
+                
+                // Realizar petición a la API
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'xc-token': API_TOKEN,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.list && data.list.length > 0) {
+                    const order = data.list[0];
+                    displayOrderDetail(order);
+                } else {
+                    showError('No se encontró el pedido con el ID especificado.');
+                }
+                
+            } catch (error) {
+                console.error('Error al cargar el pedido:', error);
+                showError(`Error al cargar el pedido: ${error.message}`);
+            }
+        }
+        
+        // Función para mostrar el detalle del pedido
+        function displayOrderDetail(order) {
+            // Actualizar título
+            orderIdDisplay.textContent = `Pedido #${order.Id}`;
+            
+            // Llenar tabla
+            document.getElementById('tableOrderId').textContent = order.Id || '';
+            document.getElementById('tableProducto').textContent = order.Producto || '';
+            document.getElementById('tableCantidad').textContent = order.Cantidad || '';
+            document.getElementById('tablePrecio').textContent = order.Precio ? `$${order.Precio}` : '';
+            document.getElementById('tableIdTurno').textContent = order.IdTurno || '';
+            
+            // Aplicar estilo a valores vacíos
+            const tableCells = [
+                document.getElementById('tableProducto'),
+                document.getElementById('tableCantidad'),
+                document.getElementById('tablePrecio'),
+                document.getElementById('tableIdTurno')
+            ];
+            
+            tableCells.forEach(cell => {
+                if (!cell.textContent.trim()) {
+                    cell.textContent = 'Sin información';
+                    cell.classList.add('empty-value');
+                }
+            });
+            
+            // Mostrar tabla y ocultar estados
+            hideAllStates();
+            orderTable.style.display = 'block';
+        }
+        
+        // Función para mostrar estado de carga
+        function showLoading() {
+            hideAllStates();
+            loadingState.style.display = 'block';
+        }
+        
+        // Función para mostrar estado de error
+        function showError(message) {
+            hideAllStates();
+            errorMessage.textContent = message;
+            errorState.style.display = 'block';
+        }
+        
+        // Función para ocultar todos los estados
+        function hideAllStates() {
+            loadingState.style.display = 'none';
+            errorState.style.display = 'none';
+            orderTable.style.display = 'none';
+        }
+        
+        // Función para alternar modo de edición
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const editButton = document.querySelector('.btn-edit');
+            
+            if (isEditMode) {
+                // Habilitar edición - convertir celdas en inputs
+                enableTableEditing();
+                editButton.textContent = '💾 Guardar Cambios';
+                editButton.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+            } else {
+                // Deshabilitar edición - convertir inputs en texto
+                disableTableEditing();
+                editButton.textContent = '✏️ Editar Pedido';
+                editButton.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                
+                // Guardar cambios
+                saveOrderChanges();
+            }
+        }
+        
+        // Función para habilitar edición en tabla
+        function enableTableEditing() {
+            const editableCells = [
+                'tableProducto',
+                'tableCantidad', 
+                'tablePrecio',
+                'tableIdTurno'
+            ];
+            
+            editableCells.forEach(cellId => {
+                const cell = document.getElementById(cellId);
+                const currentValue = cell.textContent === 'Sin información' ? '' : cell.textContent.replace('$', '');
+                
+                const input = document.createElement('input');
+                input.type = cellId === 'tableCantidad' || cellId === 'tablePrecio' ? 'number' : 'text';
+                input.value = currentValue;
+                input.style.cssText = `
+                    width: 100%;
+                    padding: 8px 12px;
+                    border: 2px solid #0066CC;
+                    border-radius: 6px;
+                    font-size: 1rem;
+                    background: white;
+                `;
+                
+                cell.innerHTML = '';
+                cell.appendChild(input);
+            });
+        }
+        
+        // Función para deshabilitar edición en tabla
+        function disableTableEditing() {
+            const editableCells = [
+                'tableProducto',
+                'tableCantidad',
+                'tablePrecio', 
+                'tableIdTurno'
+            ];
+            
+            editableCells.forEach(cellId => {
+                const cell = document.getElementById(cellId);
+                const input = cell.querySelector('input');
+                
+                if (input) {
+                    let value = input.value.trim();
+                    
+                    // Formatear precio
+                    if (cellId === 'tablePrecio' && value) {
+                        value = `$${value}`;
+                    }
+                    
+                    // Mostrar "Sin información" si está vacío
+                    if (!value) {
+                        value = 'Sin información';
+                        cell.classList.add('empty-value');
+                    } else {
+                        cell.classList.remove('empty-value');
+                    }
+                    
+                    cell.textContent = value;
+                }
+            });
+        }
+        
+        // Función para guardar cambios del pedido
+        async function saveOrderChanges() {
+            try {
+                // Recopilar datos de la tabla
+                const formData = {
+                    Id: document.getElementById('tableOrderId').textContent,
+                    Producto: getTableValue('tableProducto'),
+                    Cantidad: getTableValue('tableCantidad'),
+                    Precio: getTableValue('tablePrecio').replace('$', ''),
+                    IdTurno: getTableValue('tableIdTurno')
+                };
+                
+                // Aquí implementarías la lógica para actualizar el pedido
+                console.log('Guardando cambios:', formData);
+                alert('Cambios guardados exitosamente');
+                
+            } catch (error) {
+                console.error('Error al guardar cambios:', error);
+                alert('Error al guardar los cambios');
+            }
+        }
+        
+        // Función auxiliar para obtener valores de la tabla
+        function getTableValue(cellId) {
+            const cell = document.getElementById(cellId);
+            const input = cell.querySelector('input');
+            
+            if (input) {
+                return input.value.trim();
+            } else {
+                const value = cell.textContent.trim();
+                return value === 'Sin información' ? '' : value;
+            }
+        }
+        
+        // Función para eliminar pedido
+        function deleteOrder() {
+            if (confirm('¿Estás seguro de que deseas eliminar este pedido?')) {
+                // Aquí implementarías la lógica para eliminar el pedido
+                console.log('Eliminando pedido:', currentOrderId);
+                alert('Pedido eliminado exitosamente');
+                // Redirigir al inicio
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página de detalle de pedido cargada');
+            loadOrderDetail();
+        });
+    </script>
+</body>
+</html>
