@@ -151,48 +151,6 @@
             color: #004499;
         }
         
-        .order-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-        
-        .btn-edit {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-edit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-        }
-        
-        .btn-delete {
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-delete:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
-        }
-        
         @media (max-width: 768px) {
             .order-detail-container {
                 margin: 0 auto;
@@ -219,10 +177,6 @@
             .order-detail-table td {
                 padding: 0.75rem 0.5rem;
                 font-size: 0.85rem;
-            }
-            
-            .order-actions {
-                flex-direction: column;
             }
         }
         
@@ -294,15 +248,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                        
-                        <div class="order-actions">
-                            <button type="button" class="btn-edit" onclick="toggleEditMode()">
-                                ✏️ Editar Pedido
-                            </button>
-                            <button type="button" class="btn-delete" onclick="deleteOrder()">
-                                🗑️ Eliminar Pedido
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -317,7 +262,6 @@
         
         // Variables globales
         let currentOrderId = null;
-        let isEditMode = false;
         
         // Elementos del DOM
         const loadingState = document.getElementById('loadingState');
@@ -427,137 +371,6 @@
             loadingState.style.display = 'none';
             errorState.style.display = 'none';
             orderTable.style.display = 'none';
-        }
-        
-        // Función para alternar modo de edición
-        function toggleEditMode() {
-            isEditMode = !isEditMode;
-            const editButton = document.querySelector('.btn-edit');
-            
-            if (isEditMode) {
-                // Habilitar edición - convertir celdas en inputs
-                enableTableEditing();
-                editButton.textContent = '💾 Guardar Cambios';
-                editButton.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-            } else {
-                // Deshabilitar edición - convertir inputs en texto
-                disableTableEditing();
-                editButton.textContent = '✏️ Editar Pedido';
-                editButton.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-                
-                // Guardar cambios
-                saveOrderChanges();
-            }
-        }
-        
-        // Función para habilitar edición en tabla
-        function enableTableEditing() {
-            const editableCells = [
-                'tableProducto',
-                'tableCantidad', 
-                'tablePrecio',
-                'tableIdTurno'
-            ];
-            
-            editableCells.forEach(cellId => {
-                const cell = document.getElementById(cellId);
-                const currentValue = cell.textContent === 'Sin información' ? '' : cell.textContent.replace('$', '');
-                
-                const input = document.createElement('input');
-                input.type = cellId === 'tableCantidad' || cellId === 'tablePrecio' ? 'number' : 'text';
-                input.value = currentValue;
-                input.style.cssText = `
-                    width: 100%;
-                    padding: 8px 12px;
-                    border: 2px solid #0066CC;
-                    border-radius: 6px;
-                    font-size: 1rem;
-                    background: white;
-                `;
-                
-                cell.innerHTML = '';
-                cell.appendChild(input);
-            });
-        }
-        
-        // Función para deshabilitar edición en tabla
-        function disableTableEditing() {
-            const editableCells = [
-                'tableProducto',
-                'tableCantidad',
-                'tablePrecio', 
-                'tableIdTurno'
-            ];
-            
-            editableCells.forEach(cellId => {
-                const cell = document.getElementById(cellId);
-                const input = cell.querySelector('input');
-                
-                if (input) {
-                    let value = input.value.trim();
-                    
-                    // Formatear precio
-                    if (cellId === 'tablePrecio' && value) {
-                        value = `$${value}`;
-                    }
-                    
-                    // Mostrar "Sin información" si está vacío
-                    if (!value) {
-                        value = 'Sin información';
-                        cell.classList.add('empty-value');
-                    } else {
-                        cell.classList.remove('empty-value');
-                    }
-                    
-                    cell.textContent = value;
-                }
-            });
-        }
-        
-        // Función para guardar cambios del pedido
-        async function saveOrderChanges() {
-            try {
-                // Recopilar datos de la tabla
-                const formData = {
-                    Id: document.getElementById('tableOrderId').textContent,
-                    Producto: getTableValue('tableProducto'),
-                    Cantidad: getTableValue('tableCantidad'),
-                    Precio: getTableValue('tablePrecio').replace('$', ''),
-                    IdTurno: getTableValue('tableIdTurno')
-                };
-                
-                // Aquí implementarías la lógica para actualizar el pedido
-                console.log('Guardando cambios:', formData);
-                alert('Cambios guardados exitosamente');
-                
-            } catch (error) {
-                console.error('Error al guardar cambios:', error);
-                alert('Error al guardar los cambios');
-            }
-        }
-        
-        // Función auxiliar para obtener valores de la tabla
-        function getTableValue(cellId) {
-            const cell = document.getElementById(cellId);
-            const input = cell.querySelector('input');
-            
-            if (input) {
-                return input.value.trim();
-            } else {
-                const value = cell.textContent.trim();
-                return value === 'Sin información' ? '' : value;
-            }
-        }
-        
-        // Función para eliminar pedido
-        function deleteOrder() {
-            if (confirm('¿Estás seguro de que deseas eliminar este pedido?')) {
-                // Aquí implementarías la lógica para eliminar el pedido
-                console.log('Eliminando pedido:', currentOrderId);
-                alert('Pedido eliminado exitosamente');
-                // Redirigir al inicio
-                window.location.href = 'index.html';
-            }
         }
         
         // Inicialización
