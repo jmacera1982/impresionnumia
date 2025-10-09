@@ -239,13 +239,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td id="tableOrderId">-</td>
-                                    <td id="tableProducto">-</td>
-                                    <td id="tableCantidad">-</td>
-                                    <td id="tablePrecio">-</td>
-                                    <td id="tableIdTurno">-</td>
-                                </tr>
+                                <!-- Las filas se generarán dinámicamente -->
                             </tbody>
                         </table>
                     </div>
@@ -309,8 +303,7 @@
                 const data = await response.json();
                 
                 if (data.list && data.list.length > 0) {
-                    const order = data.list[0];
-                    displayOrderDetail(order);
+                    displayOrderDetail(data.list);
                 } else {
                     showError('No se encontró el pedido con el ID especificado.');
                 }
@@ -322,30 +315,42 @@
         }
         
         // Función para mostrar el detalle del pedido
-        function displayOrderDetail(order) {
-            // Actualizar título
-            orderIdDisplay.textContent = `Pedido #${order.Id}`;
+        function displayOrderDetail(orders) {
+            // Actualizar título con cantidad de registros
+            orderIdDisplay.textContent = `${orders.length} registro(s) encontrado(s)`;
             
-            // Llenar tabla
-            document.getElementById('tableOrderId').textContent = order.Id || '';
-            document.getElementById('tableProducto').textContent = order.Producto || '';
-            document.getElementById('tableCantidad').textContent = order.Cantidad || '';
-            document.getElementById('tablePrecio').textContent = order.Precio ? `$${order.Precio}` : '';
-            document.getElementById('tableIdTurno').textContent = order.IdTurno || '';
+            // Limpiar tabla existente
+            const tbody = document.querySelector('.order-detail-table tbody');
+            tbody.innerHTML = '';
             
-            // Aplicar estilo a valores vacíos
-            const tableCells = [
-                document.getElementById('tableProducto'),
-                document.getElementById('tableCantidad'),
-                document.getElementById('tablePrecio'),
-                document.getElementById('tableIdTurno')
-            ];
-            
-            tableCells.forEach(cell => {
-                if (!cell.textContent.trim()) {
-                    cell.textContent = 'Sin información';
-                    cell.classList.add('empty-value');
-                }
+            // Crear filas para cada registro
+            orders.forEach((order, index) => {
+                const row = document.createElement('tr');
+                
+                // Crear celdas para cada campo
+                const cells = [
+                    order.Id || '',
+                    order.Producto || '',
+                    order.Cantidad || '',
+                    order.Precio ? `$${order.Precio}` : '',
+                    order.IdTurno || ''
+                ];
+                
+                cells.forEach((value, cellIndex) => {
+                    const cell = document.createElement('td');
+                    
+                    // Mostrar "Sin información" si está vacío (excepto para el ID)
+                    if (!value.trim() && cellIndex !== 0) {
+                        cell.textContent = 'Sin información';
+                        cell.classList.add('empty-value');
+                    } else {
+                        cell.textContent = value;
+                    }
+                    
+                    row.appendChild(cell);
+                });
+                
+                tbody.appendChild(row);
             });
             
             // Mostrar tabla y ocultar estados
