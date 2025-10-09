@@ -347,7 +347,7 @@
                 showLoading();
                 
                 // Construir URL de la API
-                const apiUrl = `${API_BASE_URL}?offset=0&limit=25&where=&viewId=${VIEW_ID}&where=(Id,eq,${orderId})`;
+                const apiUrl = `${API_BASE_URL}?offset=0&limit=25&where=&viewId=${VIEW_ID}&where=(IdTurno,eq,${orderId})`;
                 
                 // Realizar petición a la API
                 const response = await fetch(apiUrl, {
