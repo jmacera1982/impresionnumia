@@ -329,11 +329,11 @@
                 
                 // Crear celdas para cada campo
                 const cells = [
-                    order.Id || '',
-                    order.Producto || '',
-                    order.Cantidad || '',
-                    order.Precio ? `$${order.Precio}` : '',
-                    order.IdTurno || ''
+                    order.Id !== null && order.Id !== undefined ? String(order.Id) : '',
+                    order.Producto !== null && order.Producto !== undefined ? String(order.Producto) : '',
+                    order.Cantidad !== null && order.Cantidad !== undefined ? String(order.Cantidad) : '',
+                    order.Precio !== null && order.Precio !== undefined ? `$${order.Precio}` : '',
+                    order.IdTurno !== null && order.IdTurno !== undefined ? String(order.IdTurno) : ''
                 ];
                 
                 cells.forEach((value, cellIndex) => {
